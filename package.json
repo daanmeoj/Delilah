@@ -1,0 +1,36 @@
+{
+  "name": "1702-express-review",
+  "version": "1.0.0",
+  "description": "## Review questions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js",
+    "seed": "node seed.js",
+    "seed:associations": "node seedAssociations.js",
+    "seed:all": "node seed.js && node seedAssociations.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ianmunrobot/1702-express-review.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ianmunrobot/1702-express-review/issues"
+  },
+  "homepage": "https://github.com/ianmunrobot/1702-express-review#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "bluebird": "^3.5.0",
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "express-validator": "^6.5.0",
+    "jwt-simple": "^0.5.6",
+    "moment": "^2.25.3",
+    "mysql": "^2.18.1",
+    "pg": "^6.1.5",
+    "sequelize": "^3.30.2",
+    "volleyball": "^1.4.1"
+  }
+}
