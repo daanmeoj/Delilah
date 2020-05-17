@@ -1,12 +1,14 @@
 const router = require("express").Router();
 
 const Producto = require("../models/Producto");
+const Usuario = require("../models/Usuario");
 
 module.exports = router;
 
 // find all productos
 router.get("/", async (req, res) => {
-  console.log(req.usuarioId);
+  const usuario = await Usuario.findById(req.usuarioId);
+  console.log(usuario.username);
   const productos = await Producto.findAll();
   res.json(productos);
 });
