@@ -1,8 +1,5 @@
 const router = require("express").Router();
 
-const Park = require("../models/Park");
-const Location = require("../models/Location");
-const Puppy = require("../models/Puppy");
 const Pedido = require("../models/Pedido");
 const Pago = require("../models/Pago");
 const Stage = require("../models/Stage");

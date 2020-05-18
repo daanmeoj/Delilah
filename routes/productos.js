@@ -2,7 +2,6 @@ const router = require("express").Router();
 
 const Producto = require("../models/Producto");
 const Usuario = require("../models/Usuario");
-const Pedido = require("../models/Pedido");
 
 module.exports = router;
 

@@ -7,10 +7,6 @@ var usuarioMiddleware = require("./middleware/usuario");
 var db = require("./db");
 
 // our routers
-var puppiesRouter = require("./routes/puppies");
-var foodsRouter = require("./routes/foods");
-var parksRouter = require("./routes/parks");
-var locationsRouter = require("./routes/locations");
 var productosRouter = require("./routes/productos");
 var usuariosRouter = require("./routes/usuarios");
 var pagosRouter = require("./routes/pagos");
@@ -39,12 +35,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
 // API routers to serve up data from the server
-app.use("/puppies", puppiesRouter);
-app.use("/foods", foodsRouter);
-app.use("/parks", parksRouter);
-app.use("/locations", locationsRouter);
+
 app.use("/productos", usuarioMiddleware.checkToken, productosRouter);
-// app.use("/productos", productosRouter);
 app.use("/usuarios", usuariosRouter);
 app.use("/pagos", usuarioMiddleware.checkToken, pagosRouter);
 app.use("/pedidos", usuarioMiddleware.checkToken, pedidosRouter);
