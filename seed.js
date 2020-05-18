@@ -7,6 +7,10 @@ const Park = require("./models/Park");
 const Food = require("./models/Food");
 const Location = require("./models/Location");
 const Producto = require("./models/Producto");
+const Pago = require("./models/Pago");
+const Pedido = require("./models/Pedido");
+const Stage = require("./models/Stage");
+const Rol = require("./models/Rol");
 
 // each of the following array will be iterated and Created
 const locationData = [
@@ -104,6 +108,57 @@ const productoData = [
   },
 ];
 
+const pagoData = [
+  {
+    name: "Efectivo",
+  },
+  {
+    name: "Tarjeta de credito",
+  },
+  {
+    name: "Rappi pay",
+  },
+];
+
+const pedidoData = [
+  {
+    total: 14000,
+  },
+  {
+    total: 21000,
+  },
+  {
+    total: 55000,
+  },
+];
+
+const stageData = [
+  {
+    name: "Nuevo",
+  },
+  {
+    name: "Confirmado",
+  },
+  {
+    name: "Preparado",
+  },
+  {
+    name: "Enviado",
+  },
+  {
+    name: "Entregado",
+  },
+];
+
+const rolData = [
+  {
+    name: "Admin",
+  },
+  {
+    name: "Customer",
+  },
+];
+
 // We will go through the Models one by one and create an instance
 // for each element in the array. Look below for a commented out version of how to do this in one slick nested Promise.
 
@@ -143,8 +198,32 @@ db.sync({ force: true })
   .then(() => {
     return Promise.map(productoData, (producto) => Producto.create(producto));
   })
-  .then((createdproductos) => {
+  .then((createdProductos) => {
     console.log(`${createdProductos.length} productos created`);
+  })
+  .then(() => {
+    return Promise.map(pagoData, (pago) => Pago.create(pago));
+  })
+  .then((createdPagos) => {
+    console.log(`${createdPagos.length} pagos created`);
+  })
+  .then(() => {
+    return Promise.map(pedidoData, (pedido) => Pedido.create(pedido));
+  })
+  .then((createdPedidos) => {
+    console.log(`${createdPedidos.length} pagos created`);
+  })
+  .then(() => {
+    return Promise.map(stageData, (stage) => Stage.create(stage));
+  })
+  .then((createdStages) => {
+    console.log(`${createdStages.length} pagos created`);
+  })
+  .then(() => {
+    return Promise.map(rolData, (rol) => Rol.create(rol));
+  })
+  .then((createdRoles) => {
+    console.log(`${createdRoles.length} pagos created`);
   })
   .then(() => {
     console.log("Seeded successfully");

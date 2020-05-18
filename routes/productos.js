@@ -2,13 +2,14 @@ const router = require("express").Router();
 
 const Producto = require("../models/Producto");
 const Usuario = require("../models/Usuario");
+const Pedido = require("../models/Pedido");
 
 module.exports = router;
 
 // find all productos
 router.get("/", async (req, res) => {
   const usuario = await Usuario.findById(req.usuarioId);
-  console.log(usuario.username);
+  //console.log(usuario.username);
   const productos = await Producto.findAll();
   res.json(productos);
 });
@@ -39,4 +40,11 @@ router.delete("/:id", async (req, res) => {
     where: { id: req.params.id },
   });
   res.json({ success: "se ha borrado el producto" });
+});
+
+router.get("/:id/pedidos", async (req, res, next) => {
+  const producto = await Producto.findById(req.params.id, {
+    include: { all: true },
+  });
+  res.json(producto);
 });

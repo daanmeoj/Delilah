@@ -4,8 +4,19 @@ const { check, validationResult } = require("express-validator");
 const moment = require("moment");
 const jwt = require("jwt-simple");
 const Usuario = require("../models/Usuario");
+const Pedido = require("../models/Pedido");
+var usuarioMiddleware = require("../middleware/usuario");
 
 module.exports = router;
+
+// get by id with the associated puppies
+router.get("/:id/pedidos", usuarioMiddleware.checkToken, (req, res, next) => {
+  Usuario.findById(req.params.id, {
+    include: [Pedido],
+  })
+    .then(res.send.bind(res))
+    .catch(next);
+});
 
 router.post(
   "/register",
@@ -34,6 +45,7 @@ router.post("/login", async (req, res) => {
   const userByUsername = await Usuario.findOne({
     where: { username: req.body.username },
   });
+
   if (userByEmail || userByUsername) {
     const iguales = userByEmail
       ? bcrypt.compareSync(req.body.password, userByEmail.password)
