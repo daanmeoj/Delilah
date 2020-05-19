@@ -1,14 +1,11 @@
 const router = require("express").Router();
-
 const Producto = require("../models/Producto");
-const Usuario = require("../models/Usuario");
+const middleware = require("../middleware/validarRol");
 
 module.exports = router;
 
 // find all productos
 router.get("/", async (req, res) => {
-  const usuario = await Usuario.findById(req.usuarioId);
-  //console.log(usuario.username);
   const productos = await Producto.findAll();
   res.json(productos);
 });
@@ -20,13 +17,13 @@ router.get("/:id", async (req, res) => {
 });
 
 // post a new producto
-router.post("/", async (req, res) => {
+router.post("/", middleware.validarRol, async (req, res) => {
   const producto = await Producto.create(req.body);
   res.json(producto);
 });
 
 // update an existing producto
-router.put("/:id", async (req, res) => {
+router.put("/:id", middleware.validarRol, async (req, res) => {
   await Producto.update(req.body, {
     where: { id: req.params.id },
   });
@@ -34,7 +31,7 @@ router.put("/:id", async (req, res) => {
 });
 
 //delete a producto By Id
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", middleware.validarRol, async (req, res) => {
   await Producto.destroy({
     where: { id: req.params.id },
   });

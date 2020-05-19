@@ -20,6 +20,7 @@ const checkToken = (req, res, next) => {
     return res.json({ error: "el token ha expirado" });
   }
 
+  // console.log(payload.rolId);
   req.usuarioId = payload.usuarioId;
 
   next();
