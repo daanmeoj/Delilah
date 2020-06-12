@@ -38,7 +38,7 @@ router.delete("/:id", middleware.validarRol, async (req, res) => {
   res.json({ success: "se ha borrado el producto" });
 });
 
-router.get("/:id/pedidos", async (req, res, next) => {
+router.get("/:id/pedidos", middleware.validarRol, async (req, res, next) => {
   const producto = await Producto.findById(req.params.id, {
     include: { all: true },
   });

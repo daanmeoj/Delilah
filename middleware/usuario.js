@@ -22,6 +22,7 @@ const checkToken = (req, res, next) => {
 
   // console.log(payload.rolId);
   req.usuarioId = payload.usuarioId;
+  req.body.usuarioId = req.usuarioId;
 
   next();
 };

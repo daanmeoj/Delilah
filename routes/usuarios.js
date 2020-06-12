@@ -6,17 +6,23 @@ const jwt = require("jwt-simple");
 const Usuario = require("../models/Usuario");
 const Pedido = require("../models/Pedido");
 var usuarioMiddleware = require("../middleware/usuario");
+const informacionPropiaMiddleware = require("../middleware/ConsultaInformacionPropia");
 
 module.exports = router;
 
 // get by id with the associated puppies
-router.get("/:id/pedidos", usuarioMiddleware.checkToken, (req, res, next) => {
-  Usuario.findById(req.params.id, {
-    include: [Pedido],
-  })
-    .then(res.send.bind(res))
-    .catch(next);
-});
+router.get(
+  "/:id/pedidos",
+  usuarioMiddleware.checkToken,
+  informacionPropiaMiddleware.consultaInformacionPropia,
+  (req, res, next) => {
+    Usuario.findById(req.params.id, {
+      include: [Pedido],
+    })
+      .then(res.send.bind(res))
+      .catch(next);
+  }
+);
 
 router.post(
   "/register",
