@@ -44,36 +44,45 @@ router.post(
   }
 );
 
-router.post("/login", async (req, res) => {
-  const userByEmail = await Usuario.findOne({
-    where: { email: req.body.email },
-  });
-  const userByUsername = await Usuario.findOne({
-    where: { username: req.body.username },
-  });
+router.post(
+  "/login",
+  [check("username", "el nombre de usuario es obligatorio").not().isEmpty()],
+  [check("password", "el password es obligatorio").not().isEmpty()],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errores: errors.array() });
+    }
+    const userByEmail = await Usuario.findOne({
+      where: { email: req.body.email },
+    });
+    const userByUsername = await Usuario.findOne({
+      where: { username: req.body.username },
+    });
 
-  if (userByEmail || userByUsername) {
-    const iguales = userByEmail
-      ? bcrypt.compareSync(req.body.password, userByEmail.password)
-      : bcrypt.compareSync(req.body.password, userByUsername.password);
+    if (userByEmail || userByUsername) {
+      const iguales = userByEmail
+        ? bcrypt.compareSync(req.body.password, userByEmail.password)
+        : bcrypt.compareSync(req.body.password, userByUsername.password);
 
-    const user = userByEmail ? userByEmail : userByUsername;
+      const user = userByEmail ? userByEmail : userByUsername;
 
-    if (iguales) {
-      res.json({ success: createToken(user) });
+      if (iguales) {
+        res.json({ success: createToken(user) });
+      } else {
+        res.json({ error: "error en usuario i/o contrasenas" });
+      }
     } else {
       res.json({ error: "error en usuario i/o contrasenas" });
     }
-  } else {
-    res.json({ error: "error en usuario i/o contrasenas" });
   }
-});
+);
 
 const createToken = (usuario) => {
   const payload = {
     usuarioId: usuario.id,
     createAt: moment().unix(),
-    expiredAt: moment().add(5, "minutes").unix(),
+    expiredAt: moment().add(50, "minutes").unix(),
   };
 
   return jwt.encode(payload, "frase secreta");

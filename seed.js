@@ -14,14 +14,19 @@ const productoData = [
   {
     name: "Pizza Megafamiliar",
     price: 34000,
+    urlImage: "https://www.papajohns.com.co/media/Italiana-banner_favOpt.jpg",
   },
   {
     name: "Corral Callejera",
     price: 41000,
+    urlImage:
+      "https://www.elcorral.com/img/our-cart/el-corral-hamburguesas-callejera..jpeg",
   },
   {
     name: "Cerveza Corona",
     price: 21000,
+    urlImage:
+      "https://www.eltiempo.com/files/image_640_428/files/crop/uploads/2018/11/23/5bf8b2a51e1c8.r_1583033774816.0-370-1080-906.jpeg",
   },
 ];
 
@@ -39,13 +44,13 @@ const pagoData = [
 
 const pedidoData = [
   {
-    total: 14000,
+    total: 0,
   },
   {
-    total: 21000,
+    total: 0,
   },
   {
-    total: 55000,
+    total: 0,
   },
 ];
 

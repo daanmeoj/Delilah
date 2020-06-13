@@ -16,6 +16,13 @@ const Producto = db.define("producto", {
       notEmpty: true,
     },
   },
+  urlImage: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+    },
+  },
 });
 
 module.exports = Producto;
