@@ -4,6 +4,9 @@ const middleware = require("../middleware/validarRol");
 const middlewareValidarInfoPedidoPropia = require("../middleware/validarInfoPedidoPropia");
 const Producto = require("../models/Producto");
 const { check, validationResult } = require("express-validator");
+const Stage = require("../models/Stage");
+const Pago = require("../models/Pago");
+const Usuario = require("../models/Usuario");
 
 const calcularTotal = async (req, res, next) => {
   producto = await Producto.findById(req.body.productoId);
@@ -45,6 +48,7 @@ router.get("/", middleware.validarRol, async (req, res) => {
 router.post("/", AgregarParametrosPorDefecto, async (req, res) => {
   try {
     const pedido = await Pedido.create(req.body);
+    console.log(req.body.productoIds[0]);
     res.json(pedido);
   } catch (e) {
     res.json({
@@ -83,9 +87,16 @@ router.put(
       if (!errors.isEmpty()) {
         return res.status(422).json({ errores: errors.array() });
       }
-      const pedido = await Pedido.findById(req.params.id);
-      pedido.setPago(req.body.pagoId);
-      res.send(pedido);
+      const pago = await Pago.findOne({
+        where: { id: req.body.pagoId },
+      });
+      if (pago) {
+        const pedido = await Pedido.findById(req.params.id);
+        pedido.setPago(req.body.pagoId);
+        res.send(pedido);
+      } else {
+        res.json({ Error: `El pagoId ${req.body.pagoId} no existe` });
+      }
     } catch (e) {
       res.json({
         Error: `hubo un error actualizando el metodo de pago: ${e.message}`,
@@ -108,8 +119,15 @@ router.put(
       }
       const pedido = await Pedido.findById(req.params.id);
       if (pedido) {
-        pedido.setStage(req.body.stageId);
-        res.send(pedido);
+        const stage = await Stage.findOne({
+          where: { id: req.body.stageId },
+        });
+        if (stage) {
+          pedido.setStage(req.body.stageId);
+          res.send(pedido);
+        } else {
+          res.json({ Error: `el stageId ${req.body.stageId} no existe` });
+        }
       }
       return res
         .status(404)
@@ -130,15 +148,31 @@ router.put(
   calcularTotal,
   async (req, res) => {
     try {
-      const pedido = await Pedido.findById(req.params.id);
+      const pedido = await Pedido.findById(req.params.id, {
+        include: { all: true },
+      });
       if (!pedido) {
         return res.sendStatus(404);
       }
       let suma;
       suma = pedido.total + req.body.total;
-      pedido.addChosenProductos(req.body.productoId);
-      pedido.update({ total: suma });
-      res.send(pedido);
+      let a = await pedido.getChosenProductos();
+      setTimeout(() => {
+        let flagInsertar = true;
+        for (i = 0; i < a.length; i++) {
+          if (a[i].id == req.body.productoId) {
+            flagInsertar = false;
+          }
+        }
+        console.log(flagInsertar);
+        if (flagInsertar) {
+          pedido.addChosenProductos(req.body.productoId);
+          pedido.update({ total: suma });
+          res.send(pedido);
+        } else {
+          res.json({ Error: "No se puede agregar porque ya estaba agregado" });
+        }
+      }, 500);
     } catch (e) {
       res.json({
         Error: `hubo un error actualizando el stage: ${e.message}`,
@@ -146,3 +180,21 @@ router.put(
     }
   }
 );
+
+// router.put("/:id/usuario", middleware.validarRol, async (req, res) => {
+//   const pedido = await Pedido.findById(req.params.id);
+//   if (!pedido) {
+//     return res.status(404).json({ Error: "este pedido no existe" });
+//   }
+//   const usuario = await Usuario.findOne({
+//     where: { id: req.body.usuarioId },
+//   });
+//   if (usuario) {
+//     pedido.setUsuario(req.body.usuarioId);
+//     res.send(pedido);
+//   } else {
+//     res.json({ Error: `usuario con id ${req.body.usuarioId} no existe` });
+//   }
+
+//   // return pedido.update({pagoId: req.body.id})
+// });

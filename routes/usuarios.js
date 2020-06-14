@@ -34,13 +34,37 @@ router.post(
   [check("deliveryAddress", "la direccion es obligatoria").not().isEmpty()],
   [check("password", "el password es obligatorio").not().isEmpty()],
   async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errores: errors.array() });
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(422).json({ errores: errors.array() });
+      }
+      const userByEmail = await Usuario.findOne({
+        where: { email: req.body.email },
+      });
+
+      const userByUsername = await Usuario.findOne({
+        where: { username: req.body.username },
+      });
+
+      if (userByEmail) {
+        return res
+          .status(422)
+          .json({ errores: "Este email ya existe, favor use otro" });
+      } else if (userByUsername) {
+        return res
+          .status(422)
+          .json({ errores: "Este username ya existe, favor use otro" });
+      } else {
+        req.body.password = bcrypt.hashSync(req.body.password, 10);
+        const usuario = await Usuario.create(req.body);
+        res.json(usuario);
+      }
+    } catch (e) {
+      res.json({
+        Error: `hubo un error con el registro: ${e.message}`,
+      });
     }
-    req.body.password = bcrypt.hashSync(req.body.password, 10);
-    const usuario = await Usuario.create(req.body);
-    res.json(usuario);
   }
 );
 
@@ -49,31 +73,37 @@ router.post(
   [check("username", "el nombre de usuario es obligatorio").not().isEmpty()],
   [check("password", "el password es obligatorio").not().isEmpty()],
   async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errores: errors.array() });
-    }
-    const userByEmail = await Usuario.findOne({
-      where: { email: req.body.email },
-    });
-    const userByUsername = await Usuario.findOne({
-      where: { username: req.body.username },
-    });
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(422).json({ errores: errors.array() });
+      }
+      const userByEmail = await Usuario.findOne({
+        where: { email: req.body.email },
+      });
+      const userByUsername = await Usuario.findOne({
+        where: { username: req.body.username },
+      });
 
-    if (userByEmail || userByUsername) {
-      const iguales = userByEmail
-        ? bcrypt.compareSync(req.body.password, userByEmail.password)
-        : bcrypt.compareSync(req.body.password, userByUsername.password);
+      if (userByEmail || userByUsername) {
+        const iguales = userByEmail
+          ? bcrypt.compareSync(req.body.password, userByEmail.password)
+          : bcrypt.compareSync(req.body.password, userByUsername.password);
 
-      const user = userByEmail ? userByEmail : userByUsername;
+        const user = userByEmail ? userByEmail : userByUsername;
 
-      if (iguales) {
-        res.json({ success: createToken(user) });
+        if (iguales) {
+          res.json({ success: createToken(user) });
+        } else {
+          res.json({ error: "error en usuario i/o contrasenas" });
+        }
       } else {
         res.json({ error: "error en usuario i/o contrasenas" });
       }
-    } else {
-      res.json({ error: "error en usuario i/o contrasenas" });
+    } catch (e) {
+      res.json({
+        Error: `hubo un error con el login: ${e.message}`,
+      });
     }
   }
 );
