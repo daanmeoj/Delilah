@@ -7,6 +7,7 @@ const { check, validationResult } = require("express-validator");
 const Stage = require("../models/Stage");
 const Pago = require("../models/Pago");
 const Usuario = require("../models/Usuario");
+let log = ";";
 
 const calcularTotal = async (req, res, next) => {
   producto = await Producto.findById(req.body.productoId);
@@ -28,6 +29,51 @@ const AgregarParametrosPorDefecto = async (req, res, next) => {
   next();
 };
 
+const AgregarProductos = async (req, res, next) => {
+  setTimeout(async () => {
+    console.log("HOLAAAAA", req.body.idPedido);
+    let suma;
+    log = "";
+    for (let productoId of req.body.productoIds) {
+      producto = await Producto.findById(productoId);
+      console.log(await producto);
+      if (producto) {
+        console.log("ENTRO");
+        const pedido = await Pedido.findById(req.body.idPedido, {
+          include: { all: true },
+        });
+        let productosExistentes = await pedido.getChosenProductos();
+
+        // setTimeout(() => {
+        let flagInsertar = true;
+        for (i = 0; i < productosExistentes.length; i++) {
+          if (productosExistentes[i].id == productoId) {
+            flagInsertar = false;
+          }
+        }
+        console.log(flagInsertar);
+        if (flagInsertar) {
+          suma = pedido.total + producto.price;
+          pedido.addChosenProductos(productoId);
+          pedido.update({ total: suma });
+          log += `producto con id ${productoId} insertado: `;
+        } else {
+          log += `producto con id ${productoId} no insertado porque ya existe; `;
+        }
+        // }, 500);
+        //suma += await producto.price;
+      } else {
+        log += `producto con id ${productoId} no insertado porque no existe un producto con ese id; `;
+      }
+
+      //console.log(await producto.name);
+    }
+    console.log(log);
+  }, 1000);
+
+  next();
+};
+
 module.exports = router;
 
 // get all pedidos
@@ -45,17 +91,30 @@ router.get("/", middleware.validarRol, async (req, res) => {
 });
 
 // post a new pedido
-router.post("/", AgregarParametrosPorDefecto, async (req, res) => {
-  try {
-    const pedido = await Pedido.create(req.body);
-    console.log(req.body.productoIds[0]);
-    res.json(pedido);
-  } catch (e) {
-    res.json({
-      Error: `hubo un error creando pedido: ${e.message}`,
-    });
+router.post(
+  "/",
+  [check("productoIds", "los productoIds son obligatorios").not().isEmpty()],
+  AgregarParametrosPorDefecto,
+  AgregarProductos,
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(422).json({ errores: errors.array() });
+      }
+      const pedido = await Pedido.create(req.body);
+
+      req.body.idPedido = pedido.id;
+      setTimeout(() => {
+        res.json({ Result: log });
+      }, 2000);
+    } catch (e) {
+      res.json({
+        Error: `hubo un error creando pedido: ${e.message}`,
+      });
+    }
   }
-});
+);
 
 // get pedido by id
 router.get(
@@ -180,21 +239,3 @@ router.put(
     }
   }
 );
-
-// router.put("/:id/usuario", middleware.validarRol, async (req, res) => {
-//   const pedido = await Pedido.findById(req.params.id);
-//   if (!pedido) {
-//     return res.status(404).json({ Error: "este pedido no existe" });
-//   }
-//   const usuario = await Usuario.findOne({
-//     where: { id: req.body.usuarioId },
-//   });
-//   if (usuario) {
-//     pedido.setUsuario(req.body.usuarioId);
-//     res.send(pedido);
-//   } else {
-//     res.json({ Error: `usuario con id ${req.body.usuarioId} no existe` });
-//   }
-
-//   // return pedido.update({pagoId: req.body.id})
-// });
