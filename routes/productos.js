@@ -25,7 +25,7 @@ router.get("/:id", async (req, res) => {
       return res.json(producto);
     }
     res.status(404).json({
-      Error: `id ${req.params.id} does not exist`,
+      Error: `id ${req.params.id} no existe`,
     });
   } catch (e) {
     res.json({

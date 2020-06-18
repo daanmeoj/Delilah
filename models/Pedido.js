@@ -9,13 +9,6 @@ const Pedido = db.define("pedido", {
       notEmpty: true,
     },
   },
-  status: {
-    type: Sequelize.STRING,
-    allowNull: true,
-    validate: {
-      notEmpty: true,
-    },
-  },
 });
 
 module.exports = Pedido;

@@ -1,5 +1,6 @@
 // importing Bluebird promises so we can Promise.map
 const Promise = require("bluebird");
+const bcrypt = require("bcryptjs");
 // bring in the db and all the Models to seed
 const db = require("./db");
 const Producto = require("./models/Producto");
@@ -7,6 +8,8 @@ const Pago = require("./models/Pago");
 const Pedido = require("./models/Pedido");
 const Stage = require("./models/Stage");
 const Rol = require("./models/Rol");
+const testPassword = bcrypt.hashSync("Software1", 10);
+const Usuario = require("./models/Usuario");
 
 // each of the following array will be iterated and Created
 
@@ -30,6 +33,39 @@ const productoData = [
   },
 ];
 
+const usuarioData = [
+  {
+    username: "juanperez",
+    firstName: "juan",
+    lastName: "perez",
+    email: "juanperez@gmail.com",
+    phoneNumber: "312",
+    deliveryAddress: "cr 2",
+    password: testPassword,
+    rolId: 1,
+  },
+  {
+    username: "juanperez2",
+    firstName: "juan2",
+    lastName: "perez2",
+    email: "juanperez2@gmail.com",
+    phoneNumber: "312",
+    deliveryAddress: "cr 2",
+    password: testPassword,
+    rolId: 2,
+  },
+  {
+    username: "juanperez3",
+    firstName: "juan3",
+    lastName: "perez3",
+    email: "juanperez3@gmail.com",
+    phoneNumber: "312",
+    deliveryAddress: "cr 2",
+    password: testPassword,
+    rolId: 1,
+  },
+];
+
 const pagoData = [
   {
     name: "Efectivo",
@@ -45,12 +81,21 @@ const pagoData = [
 const pedidoData = [
   {
     total: 0,
+    usuarioId: 1,
+    pagoId: 1,
+    stageId: 1,
   },
   {
     total: 0,
+    usuarioId: 2,
+    pagoId: 1,
+    stageId: 1,
   },
   {
     total: 0,
+    usuarioId: 3,
+    pagoId: 1,
+    stageId: 1,
   },
 ];
 
@@ -102,12 +147,6 @@ db.sync({ force: true })
     console.log(`${createdPagos.length} pagos created`);
   })
   .then(() => {
-    return Promise.map(pedidoData, (pedido) => Pedido.create(pedido));
-  })
-  .then((createdPedidos) => {
-    console.log(`${createdPedidos.length} pagos created`);
-  })
-  .then(() => {
     return Promise.map(stageData, (stage) => Stage.create(stage));
   })
   .then((createdStages) => {
@@ -118,6 +157,18 @@ db.sync({ force: true })
   })
   .then((createdRoles) => {
     console.log(`${createdRoles.length} pagos created`);
+  })
+  .then(() => {
+    return Promise.map(usuarioData, (usuario) => Usuario.create(usuario));
+  })
+  .then((createdUsuarios) => {
+    console.log(`${createdUsuarios.length} usuarios created`);
+  })
+  .then(() => {
+    return Promise.map(pedidoData, (pedido) => Pedido.create(pedido));
+  })
+  .then((createdPedidos) => {
+    console.log(`${createdPedidos.length} pedidos created`);
   })
   .then(() => {
     console.log("Seeded successfully");
