@@ -76,7 +76,74 @@ const AgregarProductos = async (req, res, next) => {
 
 module.exports = router;
 
-// get all pedidos
+//Routes
+/**
+ * @swagger
+ * /pedidos:
+ *  get:
+ *     description: Se usa para obtener todos los pedidos
+ *     parameters:
+ *        - in: header
+ *          name: user-token
+ *          required: true
+ *          schema:
+ *            type: string
+ *     responses:
+ *         "200":
+ *            description: Success
+ *            schema:
+ *                type: array
+ *                items:
+ *                     $ref: "#/definitions/Pedido"
+ *definitions:
+ *  Pedido:
+ *    properties:
+ *        id:
+ *            type: integer
+ *        total:
+ *            type: integer
+ *            required: true
+ *        pagoId:
+ *            type: integer
+ *        stageId:
+ *            type: integer
+ *        usuarioId:
+ *            type: integer
+ *        pago:
+ *           type: object
+ *           properties:
+ *              id:
+ *                type: integer
+ *              name:
+ *                type: string
+ *        stage:
+ *            type: object
+ *            properties:
+ *              id:
+ *                type: integer
+ *              name:
+ *                type: string
+ *        usuario:
+ *            type: object
+ *            properties:
+ *              id:
+ *                type: integer
+ *              name:
+ *                type: string
+ *        chosenProductos:
+ *              schema: array
+ *              items:
+ *                  type: object
+ *                  properties:
+ *                      id:
+ *                        type: integer
+ *                      name:
+ *                        type: string
+ *                      price:
+ *                        type: integer
+ *                      urlImage:
+ *                        type: string
+ */
 router.get("/", middleware.validarRol, async (req, res) => {
   try {
     const pedidos = await Pedido.findAll({

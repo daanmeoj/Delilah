@@ -24,6 +24,49 @@ router.get(
   }
 );
 
+//Routes
+/**
+ * @swagger
+ * /usuarios/register:
+ *  post:
+ *     description: se usa para registrar un nuevo usuario
+ *     parameters:
+ *        - in: body
+ *          name: Usuario
+ *          required: false
+ *          schema:
+ *            $ref: "#/definitions/Usuario"
+ *     responses:
+ *         '200':
+ *            description: Success
+ *definitions:
+ *  Usuario:
+ *    properties:
+ *        username:
+ *            type: string
+ *            required: true
+ *        firstName:
+ *            type: string
+ *            required: true
+ *        lastName:
+ *            type: string
+ *            required: true
+ *        email:
+ *            type: string
+ *            required: true
+ *        phoneNumber:
+ *            type: string
+ *            required: true
+ *        deliveryAddress:
+ *            type: string
+ *            required: true
+ *        password:
+ *            type: string
+ *            required: true
+ *        rolId:
+ *            type: string
+ *            required: true
+ */
 router.post(
   "/register",
   [check("username", "el nombre de usuario es obligatorio").not().isEmpty()],
@@ -68,6 +111,30 @@ router.post(
   }
 );
 
+//Routes
+/**
+ * @swagger
+ * /usuarios/login:
+ *  post:
+ *     description: Se usa para que el usuario se loguee
+ *     parameters:
+ *        - in: body
+ *          name: Usuario
+ *          schema:
+ *            $ref: "#/definitions/UsuarioParaLogueo"
+ *     responses:
+ *         '200':
+ *            description: Success
+ *definitions:
+ *  UsuarioParaLogueo:
+ *    properties:
+ *        username:
+ *            type: string
+ *        email:
+ *            type: string
+ *        password:
+ *            type: string
+ */
 router.post(
   "/login",
   [check("username", "el nombre de usuario es obligatorio").not().isEmpty()],

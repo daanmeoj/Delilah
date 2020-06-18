@@ -3,20 +3,34 @@ var volleyball = require("volleyball");
 var bodyParser = require("body-parser");
 var path = require("path");
 var usuarioMiddleware = require("./middleware/usuario");
+const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+
+const swaggerOptions = {
+  swaggerDefinition: {
+    info: {
+      title: "Delilah Resto API",
+      description: "Delilah Resto API Information",
+      contact: {
+        name: "David Mercado",
+      },
+      servers: ["http://localhost:3000"],
+    },
+  },
+  apis: ["./routes/*.js"],
+};
 
 var db = require("./db");
 
 // our routers
 var productosRouter = require("./routes/productos");
 var usuariosRouter = require("./routes/usuarios");
-// var pagosRouter = require("./routes/pagos");
 var pedidosRouter = require("./routes/pedidos");
-// var stagesRouter = require("./routes/stages");
-// var rolesRouter = require("./routes/roles");
 
 // instantiate an instance of an express server
 var app = express();
-
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // Logging and body parsing middleware does not have a path argument
 // but just a callback function. If the first argument to an app.use call
 // is a callback, it always matches that middleware on every request.
@@ -38,19 +52,12 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/productos", usuarioMiddleware.checkToken, productosRouter);
 app.use("/usuarios", usuariosRouter);
-// app.use("/pagos", usuarioMiddleware.checkToken, pagosRouter);
 app.use("/pedidos", usuarioMiddleware.checkToken, pedidosRouter);
-// app.use("/stages", usuarioMiddleware.checkToken, stagesRouter);
-// app.use("/roles", usuarioMiddleware.checkToken, rolesRouter);
-
 // all routes will eventually hit this by default if response is not sent
 // or if it doesn't hit a route
 app.use("*", function (req, res, next) {
   res.send("this is my default route");
 });
-
-// We aren't doing any specific error handling, just letting express do it itself with it's default
-// See https://expressjs.com/en/guide/error-handling.html 'The Default Error Handler'
 
 // actually start the server
 var server = app.listen(3000, function () {
