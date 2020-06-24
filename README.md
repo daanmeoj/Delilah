@@ -1,4 +1,4 @@
-                                        #PROYECTO DELILAH RESTO-DAVID MERCADO
+                                        # PROYECTO DELILAH RESTO-DAVID MERCADO
 
 Para correr el proyecto se deben seguir los siguientes pasos:
 
@@ -18,7 +18,7 @@ CREATE DATABASE IF NOT EXISTS delilah
 
 A continuacion se dan indicaciones para probar los endpoints:
 
-                                    #USUARIOS
+                                    # USUARIOS
 
 ## POST /usuarios/register
 
@@ -77,6 +77,8 @@ A continuacion se dan indicaciones para probar los endpoints:
 5.  Si el logueo es exitoso obtendremos un token, este debera ser usado para todas las peticiones.
     Hay que tener en cuenta que este token es solo valido por 50 minutos. si se supera este tiempo,
     hay que generar otro.
+
+                                        # PEDIDOS
 
 ## POST /pedidos
 
