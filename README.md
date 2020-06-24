@@ -1,4 +1,4 @@
-                                        PROYECTO DELILAH RESTO-DAVID MERCADO
+                                        #PROYECTO DELILAH RESTO-DAVID MERCADO
 
 Para correr el proyecto se deben seguir los siguientes pasos:
 
@@ -18,9 +18,9 @@ CREATE DATABASE IF NOT EXISTS delilah
 
 A continuacion se dan indicaciones para probar los endpoints:
 
-                                    USUARIOS
+                                    #USUARIOS
 
-\*POST /usuarios/register
+## POST /usuarios/register
 
 1.  Si se quiere crear un nuevo usuario damos click en este endpoint
 2.  damos click en try it out
@@ -53,7 +53,7 @@ A continuacion se dan indicaciones para probar los endpoints:
 5. Presionar Execute, si el registro fue exitoso se muestra el usuario creado, sino aparecera
    un mensaje diciendo que el email o usuario ya existen
 
-\*POST /usuarios/login
+## POST /usuarios/login
 
 1.Damos click en en este endpoint
 2.Damos click en try it out
@@ -78,7 +78,7 @@ A continuacion se dan indicaciones para probar los endpoints:
     Hay que tener en cuenta que este token es solo valido por 50 minutos. si se supera este tiempo,
     hay que generar otro.
 
-\*POST /pedidos
+## POST /pedidos
 
 1.  damos click a este endpoint
 2.  pegamos el token en el campo user-token
@@ -113,7 +113,7 @@ A continuacion se dan indicaciones para probar los endpoints:
                     "Result": "producto con id 1 insertado: producto con id 2 insertado: producto con id 3 insertado: "
                 }
 
-\*POST /pedidos/{pedidoId}/stage
+## POST /pedidos/{pedidoId}/stage
 
 1.  Vamos a este endpoint
 2.  Click en try it out
@@ -136,4 +136,4 @@ A continuacion se dan indicaciones para probar los endpoints:
 8.  si vamos a la base de datos y modificamos el rolId del usuario por 2 e intentamos
     otra vez este endpoint, veremos que no estamos autorizados
 
-\*POST /pedidos/{pedidoId}/stage
+## POST /pedidos/{pedidoId}/stage
