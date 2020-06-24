@@ -457,3 +457,46 @@ router.put(
     }
   }
 );
+
+/**
+ * @swagger
+ * /pedidos/{pedidoId}:
+ *  delete:
+ *     description: Se usa para eliminar un pedido por su Id
+ *     parameters:
+ *        - in: header
+ *          name: user-token
+ *          required: true
+ *          schema:
+ *            type: string
+ *        - in: path
+ *          name: pedidoId
+ *          required: true
+ *          description: Numeric id of the pedido
+ *     responses:
+ *         "200":
+ *            description: Success
+ *            schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type:string
+ */
+router.delete("/:id", middleware.validarRol, async (req, res) => {
+  try {
+    const pedido = await Pedido.findById(req.params.id);
+    if (pedido) {
+      await Pedido.destroy({
+        where: { id: req.params.id },
+      });
+      return res.json({ success: "se ha borrado el pedido" });
+    }
+    res
+      .status(404)
+      .json({ error: `el pedido con id ${req.params.id} no existe` });
+  } catch (e) {
+    res.json({
+      Error: `hubo un error eliminando el pedido: ${e.message}`,
+    });
+  }
+});
