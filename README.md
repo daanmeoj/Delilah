@@ -2,6 +2,8 @@
 
 Para correr el proyecto se deben seguir los siguientes pasos:
 
+0.  Si descargaste el proyecto de github, debes agregar tu proyecto al workspace de visual studio, abrir la terminal, ubicarte en la raiz del proyecto y ejecutar el comando npm install. Si lo descargaste de un adjunto debes descomprimirlo y agregarlo al workspace de visual studio.
+
 1.  Abrir un nuevo query en mysql y ejecutar:
 
         CREATE DATABASE IF NOT EXISTS delilah
