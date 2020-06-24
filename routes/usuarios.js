@@ -116,7 +116,7 @@ router.post(
  * @swagger
  * /usuarios/login:
  *  post:
- *     description: Se usa para que el usuario se loguee
+ *     description: Se usa para generar el token para el usuario
  *     parameters:
  *        - in: body
  *          name: Usuario

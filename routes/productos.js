@@ -5,7 +5,37 @@ const { check, validationResult } = require("express-validator");
 
 module.exports = router;
 
-// find all productos
+//Routes
+/**
+ * @swagger
+ * /productos:
+ *  get:
+ *     description: Se usa para obtener todos los productos
+ *     parameters:
+ *        - in: header
+ *          name: user-token
+ *          required: true
+ *          schema:
+ *            type: string
+ *     responses:
+ *         "200":
+ *            description: Success
+ *            schema:
+ *                type: array
+ *                items:
+ *                     $ref: "#/definitions/Producto"
+ *definitions:
+ *  Producto:
+ *    properties:
+ *        id:
+ *            type: integer
+ *        name:
+ *            type: string
+ *        price:
+ *            type: integer
+ *        urlImage:
+ *            type: string
+ */
 router.get("/", async (req, res) => {
   try {
     const productos = await Producto.findAll();
@@ -17,7 +47,28 @@ router.get("/", async (req, res) => {
   }
 });
 
-// get producto by id
+//Routes
+/**
+ * @swagger
+ * /productos/{productoId}:
+ *  get:
+ *     description: Se usa para obtener un producto por su Id
+ *     parameters:
+ *        - in: header
+ *          name: user-token
+ *          required: true
+ *          schema:
+ *            type: string
+ *        - in: path
+ *          name: productoId
+ *          required: true
+ *          description: Numeric id of the producto
+ *     responses:
+ *         "200":
+ *            description: Success
+ *            schema:
+ *                $ref: "#/definitions/Producto"
+ */
 router.get("/:id", async (req, res) => {
   try {
     const producto = await Producto.findById(req.params.id);
@@ -34,7 +85,38 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// post a new producto
+//Routes
+/**
+ * @swagger
+ * /productos:
+ *  post:
+ *     description: Se usa para crear un producto
+ *     parameters:
+ *        - in: header
+ *          name: user-token
+ *          required: true
+ *          schema:
+ *            type: string
+ *        - in: body
+ *          name: Producto
+ *          required: true
+ *          schema:
+ *            $ref: "#/definitions/ProductoParaCrear"
+ *     responses:
+ *         "200":
+ *            description: Success
+ *            schema:
+ *                $ref: "#/definitions/PedidoParaCrear"
+ *definitions:
+ *  ProductoParaCrear:
+ *    properties:
+ *        name:
+ *            type: string
+ *        price:
+ *            type: integer
+ *        urlImage:
+ *            type: string
+ */
 router.post(
   "/",
   [check("name", "el nombre del producto es obligatorio").not().isEmpty()],
@@ -62,7 +144,34 @@ router.post(
   }
 );
 
-// update an existing producto
+//Routes
+/**
+ * @swagger
+ * /productos/{productoId}:
+ *  put:
+ *     description: Se usa para actualizar el producto con id
+ *     parameters:
+ *        - in: header
+ *          name: user-token
+ *          required: true
+ *          schema:
+ *            type: string
+ *        - in: path
+ *          name: productoId
+ *          required: false
+ *          description: Numeric id of the producto
+ *        - in: body
+ *          name: producto
+ *          schema:
+ *             $ref: "#/definitions/ProductoParaCrear"
+ *          required: false
+ *          description: producto
+ *     responses:
+ *         "200":
+ *            description: Success
+ *            schema:
+ *                $ref: "#/definitions/Producto"
+ */
 router.put("/:id", middleware.validarRol, async (req, res) => {
   try {
     const producto = await Producto.findById(req.params.id);
@@ -82,7 +191,31 @@ router.put("/:id", middleware.validarRol, async (req, res) => {
   }
 });
 
-//delete a producto By Id
+//Routes
+/**
+ * @swagger
+ * /productos/{productoId}:
+ *  delete:
+ *     description: Se usa para eliminar un producto por su Id
+ *     parameters:
+ *        - in: header
+ *          name: user-token
+ *          required: true
+ *          schema:
+ *            type: string
+ *        - in: path
+ *          name: productoId
+ *          required: true
+ *          description: Numeric id of the producto
+ *     responses:
+ *         "200":
+ *            description: Success
+ *            schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type:string
+ */
 router.delete("/:id", middleware.validarRol, async (req, res) => {
   try {
     const producto = await Producto.findById(req.params.id);

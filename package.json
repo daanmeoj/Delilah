@@ -1,25 +1,20 @@
 {
-  "name": "1702-express-review",
+  "name": "Proyecto Delilah Resto",
   "version": "1.0.0",
-  "description": "## Review questions",
-  "main": "index.js",
+  "description": "Proyecto Acamica Globant",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
-    "seed": "node seed.js",
-    "seed:associations": "node seedAssociations.js",
-    "seed:all": "node seed.js && node seedAssociations.js"
+    "seed": "node seed.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ianmunrobot/1702-express-review.git"
+    "url": ""
   },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ianmunrobot/1702-express-review/issues"
-  },
-  "homepage": "https://github.com/ianmunrobot/1702-express-review#readme",
+  "homepage": "",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.5.0",

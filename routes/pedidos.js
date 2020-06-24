@@ -23,18 +23,18 @@ const calcularTotal = async (req, res, next) => {
   next();
 };
 
-const AgregarParametrosPorDefecto = async (req, res, next) => {
-  req.body.stageId = 1;
-  req.body.pagoId = 1;
-  next();
-};
+// const AgregarParametrosPorDefecto = async (req, res, next) => {
+//   req.body.stageId = 1;
+//   req.body.pagoId = 1;
+//   next();
+// };
 
 const AgregarProductos = async (req, res, next) => {
   setTimeout(async () => {
     console.log("HOLAAAAA", req.body.idPedido);
     let suma;
     log = "";
-    for (let productoId of req.body.productoIds) {
+    for (let productoId of req.body.chosenProductos) {
       producto = await Producto.findById(productoId);
       console.log(await producto);
       if (producto) {
@@ -102,7 +102,6 @@ module.exports = router;
  *            type: integer
  *        total:
  *            type: integer
- *            required: true
  *        pagoId:
  *            type: integer
  *        stageId:
@@ -157,11 +156,49 @@ router.get("/", middleware.validarRol, async (req, res) => {
   }
 });
 
-// post a new pedido
+//Routes
+/**
+ * @swagger
+ * /pedidos:
+ *  post:
+ *     description: Se usa para crear un pedido
+ *     parameters:
+ *        - in: header
+ *          name: user-token
+ *          required: true
+ *          schema:
+ *            type: string
+ *        - in: body
+ *          name: Pedido
+ *          required: true
+ *          schema:
+ *            $ref: "#/definitions/PedidoParaCrear"
+ *     responses:
+ *         "200":
+ *            description: Success
+ *            schema:
+ *                $ref: "#/definitions/PedidoParaCrear"
+ *definitions:
+ *  PedidoParaCrear:
+ *    properties:
+ *        pagoId:
+ *            type: integer
+ *        stageId:
+ *            type: integer
+ *        usuarioId:
+ *            type: integer
+ *        chosenProductos:
+ *              schema: array
+ *              items:
+ *                  type: string
+ */
 router.post(
   "/",
-  [check("productoIds", "los productoIds son obligatorios").not().isEmpty()],
-  AgregarParametrosPorDefecto,
+  [
+    check("chosenProductos", "los productoIds son obligatorios")
+      .not()
+      .isEmpty(),
+  ],
   AgregarProductos,
   async (req, res) => {
     try {
@@ -183,7 +220,28 @@ router.post(
   }
 );
 
-// get pedido by id
+//Routes
+/**
+ * @swagger
+ * /pedidos/{pedidoId}:
+ *  get:
+ *     description: Se usa para obtener un pedido por su Id
+ *     parameters:
+ *        - in: header
+ *          name: user-token
+ *          required: true
+ *          schema:
+ *            type: string
+ *        - in: path
+ *          name: pedidoId
+ *          required: true
+ *          description: Numeric id of the pedido
+ *     responses:
+ *         "200":
+ *            description: Success
+ *            schema:
+ *                $ref: "#/definitions/Pedido"
+ */
 router.get(
   "/:id",
   middlewareValidarInfoPedidoPropia.validarInformacionPedidoPropia,
@@ -201,8 +259,39 @@ router.get(
   }
 );
 
-// update the pago of a pedido
-// needs a pagoId prop in the req.body
+//Routes
+/**
+ * @swagger
+ * /pedidos/{pedidoId}/pago:
+ *  put:
+ *     description: Se usa para actualizar la forma de pago de un pedido
+ *     parameters:
+ *        - in: header
+ *          name: user-token
+ *          required: true
+ *          schema:
+ *            type: string
+ *        - in: path
+ *          name: pedidoId
+ *          required: true
+ *          description: Numeric id of the pedido
+ *        - in: body
+ *          name: pagoId
+ *          schema:
+ *             $ref: "#/definitions/PedidoParaActualizarPago"
+ *          required: true
+ *          description: Numeric id of the pago
+ *     responses:
+ *         "200":
+ *            description: Success
+ *            schema:
+ *                $ref: "#/definitions/Pedido"
+ *definitions:
+ *  PedidoParaActualizarPago:
+ *    properties:
+ *        pagoId:
+ *            type: integer
+ */
 router.put(
   "/:id/pago",
   [check("pagoId", "el pago es obligatorio").not().isEmpty()],
@@ -231,8 +320,39 @@ router.put(
   }
 );
 
-// update the pago of a pedido
-// needs a pagoId prop in the req.body
+//Routes
+/**
+ * @swagger
+ * /pedidos/{pedidoId}/stage:
+ *  put:
+ *     description: Se usa para actualizar el stage en que se encuentra un pedido
+ *     parameters:
+ *        - in: header
+ *          name: user-token
+ *          required: true
+ *          schema:
+ *            type: string
+ *        - in: path
+ *          name: pedidoId
+ *          required: true
+ *          description: Numeric id of the pedido
+ *        - in: body
+ *          name: stageId
+ *          schema:
+ *             $ref: "#/definitions/PedidoParaActualizarStage"
+ *          required: true
+ *          description: Numeric id of the stage
+ *     responses:
+ *         "200":
+ *            description: Success
+ *            schema:
+ *                $ref: "#/definitions/Pedido"
+ *definitions:
+ *  PedidoParaActualizarStage:
+ *    properties:
+ *        stageId:
+ *            type: integer
+ */
 router.put(
   "/:id/stage",
   middleware.validarRol,
@@ -266,8 +386,39 @@ router.put(
   }
 );
 
-// add producto of a pedido
-// needs a productoId prop in the req.bodyy
+//Routes
+/**
+ * @swagger
+ * /pedidos/{pedidoId}/producto:
+ *  put:
+ *     description: Se usa para agregar un producto a un pedido
+ *     parameters:
+ *        - in: header
+ *          name: user-token
+ *          required: true
+ *          schema:
+ *            type: string
+ *        - in: path
+ *          name: pedidoId
+ *          required: true
+ *          description: Numeric id of the pedido
+ *        - in: body
+ *          name: productoId
+ *          schema:
+ *             $ref: "#/definitions/ProductoParaAgregar"
+ *          required: true
+ *          description: Numeric id of the producto
+ *     responses:
+ *         "200":
+ *            description: Success
+ *            schema:
+ *                $ref: "#/definitions/Pedido"
+ *definitions:
+ *  ProductoParaAgregar:
+ *    properties:
+ *        productoId:
+ *            type: integer
+ */
 router.put(
   "/:id/producto",
   middlewareValidarInfoPedidoPropia.validarInformacionPedidoPropia,
