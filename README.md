@@ -138,4 +138,96 @@ A continuacion se dan indicaciones para probar los endpoints:
 8.  si vamos a la base de datos y modificamos el rolId del usuario por 2 e intentamos
     otra vez este endpoint, veremos que no estamos autorizados
 
-## POST /pedidos/{pedidoId}/stage
+## POST /productos
+
+1.  Luego del paso 8 de la seccion anterior devolvemos el usuario a rolId 1.
+2.  damos click en este endpoint.
+3.  Click en try it out
+4.  pegamos el user-token
+5.  En el area de texto nos aparecera un JSON como el siguiente:
+
+                {
+                    "name": "string",
+                    "price": 0,
+                    "urlImage": "string"
+                }
+
+6.  Modificamos los campos con datos de ejemplo
+
+                {
+                    "name": "Asado Argetino",
+                    "price": 45000,
+                    "urlImage": "www.asado.com"
+                }
+
+7.  Click en execute
+8.  Si el producto se crea exitoso aparece el pedido en la respuesta
+9.  Si cambiamos el rolId de nuestro usuario en la base de datos por 2 e intentamos hacer esto
+    otra vez nos respondera Usuario no autorizado
+
+# PUT /productos/{productoId}
+
+1.  Damos click a este endpoint
+2.  Click en try it out
+3.  Pegamos el user-token
+4.  Ponemos el productId ejemplo 1
+5.  En el area de texto nos aparecera un JSON como el siguiente:
+
+                {
+                    "name": "string",
+                    "price": 0,
+                    "urlImage": "string"
+                }
+
+6.  Modificamos lo que queramos pero solo enviamos los campos que querramos actualizar, ejemplo
+
+                {
+                    "name": "filete",
+                    "price": 45000
+                }
+
+7.  click en execute
+8.  si es exitoso nos responde un mensaje como el siguiente:
+
+                {
+                    "success": "se ha modificado"
+                }
+
+9.  Si cambiamos el rolId de nuestro usuario en la base de datos por 2 e intentamos hacer esto
+    otra vez nos respondera Usuario no autorizado
+
+# DELETE /productos/{productoId}
+
+1.  Damos click a este endpoint
+2.  Click en try it out
+3.  Pegamos el user-token
+4.  Ponemos el productId ejemplo 1
+5.  Si la eliminacion es exitosa el servidor nos respondera
+
+                {
+                    "success": "se ha borrado el producto"
+                }
+
+6.  Si cambiamos el rolId de nuestro usuario en la base de datos por 2 e intentamos hacer esto
+    otra vez nos respondera Usuario no autorizado
+
+# GET /pedidos
+
+1.  Damos click a este endpoint
+2.  Click en try it out
+3.  Pegamos el user-token
+4.  El servidor nos respondera con una lista de pedidos
+5.  Observamos que el pedido 1 fue creado por el usuarioId 1 pero nosotros somos el usuarioId 4
+6.  Cambiamos nuestro rolId en la base de datos por 2
+
+# GET /pedidos/{pedidoId}
+
+1.  Damos click a este endpoint
+2.  Click en try it out
+3.  Pegamos el user-token
+4.  Ponemos el PedidoId 1
+5.  Dado que este pedido fue creado por el usuario 1 y nosotros no tenemos rolId 1 sino 2 (del paso 6 de la seccion anterior) nos tiene que aparecer el mensaje
+
+        {
+            "error": "Usted solo puede acceder a su informacion"
+        }

@@ -106,7 +106,7 @@ router.get("/:id", async (req, res) => {
  *         "200":
  *            description: Success
  *            schema:
- *                $ref: "#/definitions/PedidoParaCrear"
+ *                $ref: "#/definitions/ProductoParaCrear"
  *definitions:
  *  ProductoParaCrear:
  *    properties:
